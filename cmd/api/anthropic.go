@@ -12,14 +12,14 @@ var (
 	client anthropic.Client
 )
 
-func SendChat(apiKey string, message string) (string, error) {
-	client := anthropic.NewClient(apiKey)
-	resp, err := client.CreateMessages(context.Background(), anthropic.MessagesRequest{
-		Model: anthropic.ModelClaudeInstant1Dot2,
+func SendChat(apiKey string, question string) (string, error) {
+	c := anthropic.NewClient(apiKey)
+	resp, err := c.CreateMessages(context.Background(), anthropic.MessagesRequest{
+		Model: anthropic.ModelClaude3Dot5Sonnet20240620,
 		Messages: []anthropic.Message{
-			anthropic.NewUserTextMessage(message),
+			anthropic.NewUserTextMessage(question),
 		},
-		MaxTokens: 1000,
+		MaxTokens: 1024,
 	})
 	if err != nil {
 		var e *anthropic.APIError

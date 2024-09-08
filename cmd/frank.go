@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	api "github.com/jburns24/frank/api"
+	api "github.com/jburns24/frank/cmd/api"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -50,7 +50,7 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	key = viper.GetString("claude.api_key")
+	key = strings.TrimSpace(viper.GetString("claude.api_key"))
 	if key == "" {
 		fmt.Println("No api key found")
 		os.Exit(1)
@@ -83,9 +83,12 @@ Simple wrapper for the Claude Sonnet 3.5 model.
 				break
 			}
 
-			resp := api.SendChat(key, input)
-
-			fmt.Printf("You said \"%s\"\n", input)
+			resp, err := api.SendChat(key, input)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			fmt.Printf("\033[34m> %s\033[0m\n", resp)
 		}
 	},
 }
